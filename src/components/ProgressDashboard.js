@@ -1,8 +1,23 @@
 import React from 'react';
 
 function ProgressDashboard({ progress }) {
-  const averageScore = progress.quizScores.length > 0 
-    ? (progress.quizScores.reduce((sum, quiz) => sum + quiz.score, 0) / progress.quizScores.length * 100).toFixed(1)
+  // Add null checks for all progress properties
+  if (!progress) {
+    return (
+      <div className="progress-dashboard">
+        <h3>📊 Your Progress</h3>
+        <div className="progress-stat">
+          Loading progress...
+        </div>
+      </div>
+    );
+  }
+
+  const quizScores = progress.quizScores || [];
+  const topicsCovered = progress.topicsCovered || [];
+  
+  const averageScore = quizScores.length > 0 
+    ? (quizScores.reduce((sum, quiz) => sum + quiz.score, 0) / quizScores.length * 100).toFixed(1)
     : 0;
 
   return (
@@ -10,11 +25,11 @@ function ProgressDashboard({ progress }) {
       <h3>📊 Your Progress</h3>
       
       <div className="progress-stat">
-        <strong>Learning Streak:</strong> {progress.streak} days
+        <strong>Learning Streak:</strong> {progress.streak || 0} days
       </div>
       
       <div className="progress-stat">
-        <strong>Topics Covered:</strong> {progress.topicsCovered.length}
+        <strong>Topics Covered:</strong> {topicsCovered.length}
       </div>
       
       <div className="progress-stat">
@@ -22,13 +37,13 @@ function ProgressDashboard({ progress }) {
       </div>
       
       <div className="progress-stat">
-        <strong>Last Activity:</strong> {new Date(progress.lastActivity).toLocaleDateString()}
+        <strong>Last Activity:</strong> {progress.lastActivity ? new Date(progress.lastActivity).toLocaleDateString() : 'Never'}
       </div>
       
-      {progress.quizScores.length > 0 && (
+      {quizScores.length > 0 && (
         <div className="recent-quizzes">
           <h4>Recent Quiz Scores</h4>
-          {progress.quizScores.slice(-3).map((quiz, index) => (
+          {quizScores.slice(-3).map((quiz, index) => (
             <div key={index} className="quiz-score">
               {quiz.topic}: {quiz.score * 100}%
             </div>

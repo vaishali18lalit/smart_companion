@@ -30,7 +30,8 @@ function App() {
     try {
       setLoading(true);
       const data = await getContent(domain);
-      setContent(data);
+      console.log('API Response:', data); // Debug log
+      setContent(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error loading content:', error);
       setContent([]);

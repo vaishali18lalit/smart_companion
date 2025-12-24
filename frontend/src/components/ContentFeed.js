@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { getContentSummary, getContentExplanation, updateProgress } from '../services/api';
 import RapidQuiz from './RapidQuiz';
 
-function ContentFeed({ domain, content, onContentUpdate, onProgressUpdate }) {
+function ContentFeed({ domain, content = [], onContentUpdate, onProgressUpdate }) {
   const [expandedContent, setExpandedContent] = useState({});
   const [loading, setLoading] = useState({});
   const [showRapidQuiz, setShowRapidQuiz] = useState(false);

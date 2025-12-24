@@ -69,7 +69,7 @@ function ContentFeed({ domain, content, onContentUpdate, onProgressUpdate }) {
     );
   }
 
-  if (!content || content.length === 0) {
+  if (!content || !Array.isArray(content) || content.length === 0) {
     return (
       <div className="content-feed">
         <h2>{getDomainTitle(domain)}</h2>

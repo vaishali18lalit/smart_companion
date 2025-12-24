@@ -96,7 +96,7 @@ function ContentFeed({ domain, content, onContentUpdate, onProgressUpdate }) {
         </button>
       </div>
       
-      {content.map(item => (
+      {Array.isArray(content) && content.map(item => (
         <div key={item._id} className="content-item">
           <h3>{item.title}</h3>
           <div className="content-meta">
@@ -136,7 +136,7 @@ function ContentFeed({ domain, content, onContentUpdate, onProgressUpdate }) {
             )}
           </div>
         </div>
-      ))}
+        ))}
     </div>
   );
 }

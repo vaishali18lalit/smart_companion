@@ -1,14 +1,5 @@
 {
-  "functions": {
-    "backend/server-openrouter.js": {
-      "maxDuration": 30
-    }
-  },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/backend/server-openrouter.js"
-    },
     {
       "source": "/(.*)",
       "destination": "/frontend/build/index.html"

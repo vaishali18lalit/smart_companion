@@ -6,7 +6,7 @@ const API_BASE = process.env.NODE_ENV === 'production'
 
 export const getContent = async (domain, limit = 10) => {
   const response = await axios.get(`${API_BASE}/content/${domain}?limit=${limit}`);
-  return response.data;
+  return Array.isArray(response.data) ? response.data : [];
 };
 
 export const getContentSummary = async (domain, id) => {

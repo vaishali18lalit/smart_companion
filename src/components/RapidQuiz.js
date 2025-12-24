@@ -11,6 +11,7 @@ function RapidQuiz({ domain, onClose, onScoreUpdate }) {
   const [streak, setStreak] = useState(0);
   const [gameActive, setGameActive] = useState(true);
   const [answerFeedback, setAnswerFeedback] = useState(null);
+  const [showNextButton, setShowNextButton] = useState(false);
 
   const loadNextQuestion = async () => {
     try {
@@ -27,6 +28,7 @@ function RapidQuiz({ domain, onClose, onScoreUpdate }) {
       setSelectedAnswer('');
       setShowResult(false);
       setAnswerFeedback(null);
+      setShowNextButton(false);
     } catch (error) {
       console.error('Error loading question:', error);
     }
@@ -53,11 +55,19 @@ function RapidQuiz({ domain, onClose, onScoreUpdate }) {
     onScoreUpdate();
   };
 
+  const handleNext = () => {
+    setQuestionCount(questionCount + 1);
+    if (questionCount + 1 >= 10) {
+      endGame();
+    }
+  };
+
   const handleAnswer = async (answer) => {
     if (showResult) return;
     
     setSelectedAnswer(answer);
     setShowResult(true);
+    setShowNextButton(true);
     
     // Extract correct answer from quiz
     const correctAnswer = currentQuestion.quiz.split('\n').find(line => line.startsWith('Answer:'))?.replace('Answer: ', '') || 'B';
@@ -82,13 +92,6 @@ function RapidQuiz({ domain, onClose, onScoreUpdate }) {
         explanation: isCorrect ? 'Correct! Well done!' : `Wrong! The correct answer was ${correctAnswer}.`
       });
     }
-    
-    setTimeout(() => {
-      setQuestionCount(questionCount + 1);
-      if (questionCount + 1 >= 10) {
-        endGame();
-      }
-    }, 3000);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,16 +100,6 @@ function RapidQuiz({ domain, onClose, onScoreUpdate }) {
       loadNextQuestion();
     }
   }, [questionCount, gameActive]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    if (timeLeft > 0 && gameActive && !showResult) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-      return () => clearTimeout(timer);
-    } else if (timeLeft === 0 && gameActive) {
-      handleTimeout();
-    }
-  }, [timeLeft, gameActive, showResult]);
 
   const getScoreColor = () => {
     if (score >= 80) return '#28a745';
@@ -170,9 +163,6 @@ function RapidQuiz({ domain, onClose, onScoreUpdate }) {
         <div className="quiz-stats-top">
           <div className="score">Score: {score}</div>
           <div className="streak">Streak: {streak} {getStreakEmoji()}</div>
-          <div className={`timer ${timeLeft <= 5 ? 'urgent' : ''}`}>
-            ⏱️ {timeLeft}s
-          </div>
         </div>
       </div>
 
@@ -216,6 +206,11 @@ function RapidQuiz({ domain, onClose, onScoreUpdate }) {
             <div className="feedback-explanation">
               {answerFeedback.explanation}
             </div>
+            {showNextButton && (
+              <button className="btn next-btn" onClick={handleNext}>
+                {questionCount + 1 >= 10 ? 'Finish Quiz' : 'Next Question'}
+              </button>
+            )}
           </div>
         )}
       </div>

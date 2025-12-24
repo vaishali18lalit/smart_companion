@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_BASE = '/api';
+const API_BASE = process.env.NODE_ENV === 'production' 
+  ? '/api'
+  : '/api';
 
 export const getContent = async (domain, limit = 10) => {
   const response = await axios.get(`${API_BASE}/content/${domain}?limit=${limit}`);
